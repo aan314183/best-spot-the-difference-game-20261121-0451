@@ -1,0 +1,269 @@
+/* Lantern Lane — Spot the Difference: presentation only.
+   All art is inline SVG drawn by render.js; this file only lays out
+   the page, the HUD and the overlays. System fonts only, no network. */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { height: 100%; }
+
+body {
+  font-family: "Trebuchet MS", "Segoe UI", Verdana, sans-serif;
+  background: #141021 radial-gradient(circle at 50% -10%, #2c2350 0%, #141021 60%);
+  color: #f5ead2;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 14px 16px;
+}
+
+header.topbar {
+  width: 100%;
+  max-width: 1240px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 6px 4px 10px;
+}
+
+.brand h1 {
+  font-size: 26px;
+  letter-spacing: 2px;
+  color: #ffd76a;
+  text-shadow: 0 2px 0 #7a4d12, 0 0 18px rgba(255, 215, 106, .35);
+  white-space: nowrap;
+}
+.brand .subtitle {
+  font-size: 12px;
+  color: #c9b8e8;
+  letter-spacing: 1px;
+}
+
+.hud {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.pill {
+  background: #241b3d;
+  border: 2px solid #4a3670;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 15px;
+  font-weight: bold;
+  color: #f5ead2;
+  white-space: nowrap;
+}
+.pill b { color: #ffd76a; }
+.pill.counter { border-color: #ffd76a; font-size: 17px; }
+.pill.counter b { font-size: 20px; }
+.pill.timer.low { border-color: #ff5a5a; color: #ffb3b3; animation: pulse 1s infinite; }
+@keyframes pulse { 50% { opacity: .55; } }
+
+button.hudbtn {
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: bold;
+  color: #241b3d;
+  background: #ffd76a;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+button.hudbtn:hover { background: #ffe08a; }
+button.hudbtn:disabled { opacity: .4; cursor: default; }
+button.hudbtn.ghost {
+  background: transparent;
+  color: #f5ead2;
+  border: 2px solid #4a3670;
+}
+
+nav.leveltabs { display: flex; gap: 6px; }
+nav.leveltabs button {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 2px solid #4a3670;
+  background: #1d1533;
+  color: #c9b8e8;
+  cursor: pointer;
+}
+nav.leveltabs button.active { background: #ffd76a; color: #241b3d; border-color: #ffd76a; }
+nav.leveltabs button.done { border-color: #7ac74f; color: #b8e39a; }
+
+.timebar {
+  width: 100%;
+  max-width: 1240px;
+  height: 8px;
+  background: #241b3d;
+  border-radius: 99px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.timebar > div {
+  height: 100%;
+  background: linear-gradient(90deg, #7ac74f, #ffd76a);
+  border-radius: 99px;
+  transition: width .5s linear;
+}
+.timebar.low > div { background: linear-gradient(90deg, #ff5a5a, #ff9a3d); }
+
+main.panels {
+  width: 100%;
+  max-width: 1240px;
+  display: flex;
+  gap: 14px;
+  align-items: stretch;
+}
+
+.panel {
+  flex: 1 1 0;
+  background: #0d0a1a;
+  border: 3px solid #4a3670;
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+  cursor: crosshair;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, .45);
+}
+.panel.found-flash { animation: panelpop .35s ease; }
+@keyframes panelpop { 30% { border-color: #ffd76a; } }
+
+.panel .tag {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  z-index: 3;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  color: #0d0a1a;
+  background: rgba(255, 215, 106, .92);
+  border-radius: 99px;
+  padding: 3px 10px;
+}
+.panel .tag.right { background: rgba(122, 199, 79, .92); }
+
+.panel svg { display: block; width: 100%; height: auto; }
+
+.marker-ring {
+  fill: none;
+  stroke: #ffd76a;
+  stroke-width: 5;
+  filter: drop-shadow(0 0 6px rgba(255, 215, 106, .9));
+  animation: ringin .3s ease;
+}
+.marker-check {
+  fill: #ffd76a;
+  stroke: #241b3d;
+  stroke-width: 1.5;
+  font-weight: bold;
+  font-size: 20px;
+  text-anchor: middle;
+}
+@keyframes ringin {
+  from { transform: scale(.4); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+.hint-ring {
+  fill: none;
+  stroke: #7ac74f;
+  stroke-width: 4;
+  stroke-dasharray: 10 8;
+  animation: hintspin 1.2s linear;
+}
+@keyframes hintspin { to { stroke-dashoffset: -72; } }
+.miss-x {
+  stroke: #ff5a5a;
+  stroke-width: 5;
+  stroke-linecap: round;
+  animation: missfade .8s ease forwards;
+}
+@keyframes missfade { to { opacity: 0; } }
+
+footer.foot {
+  width: 100%;
+  max-width: 1240px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+#message {
+  font-size: 15px;
+  color: #ffe9a8;
+  min-height: 22px;
+  flex: 1;
+}
+.keys { font-size: 12px; color: #a99ac9; }
+.keys kbd {
+  background: #241b3d;
+  border: 1px solid #4a3670;
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-family: inherit;
+  color: #f5ead2;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 6, 24, .82);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  padding: 20px;
+}
+.overlay.hidden { display: none; }
+.card {
+  background: #1d1533;
+  border: 3px solid #ffd76a;
+  border-radius: 18px;
+  padding: 28px 34px;
+  max-width: 620px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, .6);
+}
+.card h2 { color: #ffd76a; font-size: 30px; letter-spacing: 1px; margin-bottom: 8px; }
+.card p { font-size: 15px; line-height: 1.55; color: #e8dcf5; margin-bottom: 12px; }
+.card .big { font-size: 19px; color: #ffd76a; font-weight: bold; }
+.stars { font-size: 34px; letter-spacing: 6px; margin: 6px 0 10px; }
+.levelcards { display: flex; gap: 10px; margin: 14px 0; }
+.levelcards button {
+  flex: 1;
+  font-family: inherit;
+  background: #241b3d;
+  border: 2px solid #4a3670;
+  border-radius: 12px;
+  color: #f5ead2;
+  padding: 14px 8px;
+  cursor: pointer;
+}
+.levelcards button:hover { border-color: #ffd76a; }
+.levelcards button .lv { font-size: 22px; display: block; margin-bottom: 4px; }
+.levelcards button .nm { font-size: 14px; font-weight: bold; display: block; }
+.levelcards button .df { font-size: 12px; color: #a99ac9; display: block; margin-top: 3px; }
+.levelcards button .st { font-size: 12px; color: #7ac74f; display: block; margin-top: 3px; }
+.card .cta {
+  font-family: inherit;
+  font-size: 17px;
+  font-weight: bold;
+  background: #ffd76a;
+  color: #241b3d;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 30px;
+  cursor: pointer;
+  margin-top: 6px;
+}
+.card .cta:hover { background: #ffe08a; }
